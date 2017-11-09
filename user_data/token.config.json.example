@@ -1,0 +1,7 @@
+{
+	"token": {
+		"value": "<your token here>",
+		"name": "Токен доступа к приложению",
+		"description": "Тестовый токен можно получить на полигоне https://tech.yandex.ru/disk/poligon/"
+	}
+}

@@ -1,0 +1,5 @@
+node_modules/
+.idea/
+
+# User data
+/user_data/*.json

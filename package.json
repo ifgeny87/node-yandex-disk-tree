@@ -1,0 +1,15 @@
+{
+  "name": "yandex-disk-tree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "async": "^2.5.0",
+    "request": "^2.83.0"
+  }
+}
