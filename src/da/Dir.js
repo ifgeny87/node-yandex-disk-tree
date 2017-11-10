@@ -1,6 +1,4 @@
-const F = require('./common')
-
-class Dir {
+module.exports = class Dir {
 	constructor(name) {
 		this.name = name
 		this.dirs = []
@@ -74,35 +72,3 @@ class Dir {
 		this.allFilesCount = allFilesCount + this.files.length
 	}
 }
-
-class File {
-	constructor(item) {
-		this.name = item.name
-		this.size = item.size
-	}
-}
-
-class FileTree extends Dir {
-	constructor(fileList) {
-		super('disk:')
-
-		for (let i in fileList) {
-			const file = new File(fileList[i])
-			const path = fileList[i].path.split('/')
-			path.pop() // имя файла не нужно
-			path.shift() // первый уровень - это рут
-
-			this.addFileDeep(path, file)
-		}
-
-		this.updateSize()
-
-		console.log('file tree maked. Stats:')
-		console.log('dirs : ' + this.dirs.length)
-		console.log('files : ' + this.files.length)
-		console.log('tree size : ' + F.getHumanMemorySize(this.size))
-		console.log('all files count : ' + this.allFilesCount)
-	}
-}
-
-exports.FileTree = FileTree

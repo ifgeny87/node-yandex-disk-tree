@@ -1,6 +1,6 @@
 const request = require('request')
 
-const F = require('./common')
+const F = require('../../common/index')
 
 const yadApiUri = 'https://cloud-api.yandex.net/v1/disk/resources/files?'
 
@@ -18,6 +18,9 @@ function get(apiToken, offset, next) {
 module.exports = function getYadFileList(apiToken, next) {
 	const fileList = []
 	let allSize = 0
+	const start = new Date()
+
+	console.log('# getYadFileList started in ' + start)
 
 	const f = (err, httpResponse) => {
 		if (err) {
@@ -26,7 +29,7 @@ module.exports = function getYadFileList(apiToken, next) {
 		}
 
 		// log
-		console.log('receive bytes : ' + F.getHumanMemorySize(httpResponse.body.length))
+		console.log('	receive bytes : ' + F.getHumanMemorySize(httpResponse.body.length))
 
 		let json
 
@@ -43,12 +46,15 @@ module.exports = function getYadFileList(apiToken, next) {
 		}
 
 		// log
-		console.log(`step : ${json.offset} -> ${fileList.length}`)
-		console.log('heap : ' + F.getHumanMemorySize(process.memoryUsage().heapUsed))
+		console.log(`	step : ${json.offset} -> ${fileList.length}`)
+		console.log('	heap : ' + F.getHumanMemorySize(process.memoryUsage().heapUsed))
 
 		if (json.limit > json.items.length) {
 			// завершено
-			console.log('all file size : ' + F.getHumanMemorySize(allSize))
+			console.log('	all file size : ' + F.getHumanMemorySize(allSize))
+			const length = Date.now() - start.getTime()
+			console.log(`	finished in ${length / 1000}`)
+			console.log(`	filelist size:  ${fileList.length}`)
 			next(null, fileList)
 		}
 		else {

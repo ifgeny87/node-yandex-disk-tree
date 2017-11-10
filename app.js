@@ -1,44 +1,40 @@
 const fs = require('fs')
 const async = require('async')
 
-const F = require('./common')
-const getYadFileList = require('./getYadFileList')
-const {FileTree} = require('./fileTree')
+const F = require('./src/common')
+const getYadFileList = require('./src/cg/yad/getFileList')
+const FileTree = require('./src/da/FileTree')
 
-const tokenConfig = require('./token.config.json')
+const tokenConfig = require('./user_data/token.config.json')
 
 // здесь будут храниться списки файлов, плоский и дерево
 let fileList, fileTree
 
 async.series([
-	// getFileListFromYad,
-	// saveFileListToDisk,
-	loadFileListFromDisk,
-	makeFileTreeFromList,
-	printTree,
-	printBigFilesBySize
+	getFileListFromYad,		// загрузка списка файлов с ЯДа
+	saveFileListToDisk,		// сохранение списка файлов на диск
+	//loadFileListFromDisk,	// загрузка списка файлов с диска
+	makeFileTreeFromList,	// формирование дерева файлов
+	printTree,				// печать дерева в консоль
+	printBigFilesBySize,	// печать больших файлов, отсортированных по размеру
 ], (err, result) => {
 	if (err) console.error('Apppplication has error', err)
-
-	console.log('Done...', 'RESULTS:', result)
 })
 
 function getFileListFromYad(next) {
-	getYadFileList(tokenConfig.token, (err, flResult) => {
+	getYadFileList(tokenConfig.token.value, (err, fileListResult) => {
 		if (err) return next(err)
-
-		fileList = flResult
-		console.log('file list size :' + fileList.length)
+		fileList = fileListResult
 		next(null)
 	})
 }
 
 function saveFileListToDisk(next) {
-	fs.writeFile('fileList.json', JSON.stringify(fileList), 'utf8', next)
+	fs.writeFile('user_data/fileList.json', JSON.stringify(fileList), 'utf8', next)
 }
 
 function loadFileListFromDisk(next) {
-	fs.readFile('fileList.json', 'utf8', (err, data) => {
+	fs.readFile('user_data/fileList.json', 'utf8', (err, data) => {
 		if (err) return next(err)
 
 		fileList = JSON.parse(data)
@@ -95,7 +91,7 @@ function printBigFilesBySize(next) {
 
 	const list = fileList
 		.filter(f => f.size > bigSize)
-		.sort((a, b) => a.size - b.size)
+		.sort((a, b) => b.size - a.size)
 
 	list.forEach(f => {
 		const sizeP = 100 / fileTree.size * f.size
