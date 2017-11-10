@@ -1,3 +1,3 @@
 window.addEventListener('load', () => {
-    alert(1)
+    alert('Javascript works')
 })

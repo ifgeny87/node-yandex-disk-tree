@@ -38,7 +38,7 @@ app.use(session({
 app.use(sendHttpError)
 
 // static files
-app.use(express.static(path.resolve(__dirname, 'static')))
+app.use(express.static('static'))
 
 // setup routes
 // require('@/routes')(app)
